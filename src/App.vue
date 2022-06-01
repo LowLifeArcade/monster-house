@@ -26,7 +26,7 @@
   <div v-if="gameState === 'START'">
     <button @click="startGame">Start Game?</button>
   </div>
-  <div class="hide" :class="{'end': gameState === 'END'}">
+  <div class="hide" :class="{ end: gameState === 'END' }">
     <button @click="startGame">Try Again?</button>
   </div>
 </template>
@@ -117,7 +117,7 @@ export default {
           this.subStoryState = STORY_STATE.DOOR.subStates.afterKnock.value;
           // new if statements available
         }, 3000);
-      }, 2000);
+      }, 1800);
       //   this.character_action = "";
     },
     dispatch(e) {
@@ -141,15 +141,17 @@ export default {
         ) {
           switch (true) {
             case actionName.includes("knock"):
-              this.message = "You knocked";
+              this.message = "You knock";
               setTimeout(() => {
-                this.message = "There was no answer";
+                this.message = "There is no answer";
                 setTimeout(() => {
                   this.message = "You hear a scream";
-                  this.subStoryState =
-                    STORY_STATE.DOOR.subStates.afterKnock.value;
-                  this.disabled = false;
-                  this.focus();
+                  setTimeout(() => {
+                    this.subStoryState =
+                      STORY_STATE.DOOR.subStates.afterKnock.value;
+                    this.disabled = false;
+                    this.focus();
+                  }, 1800);
                   // new if statements available
                 }, 3000);
               }, 2000);
@@ -171,7 +173,7 @@ export default {
         ) {
           switch (true) {
             case actionName.includes("knock"):
-              this.message = "You knocked again...";
+              this.message = "You knock again...";
               setTimeout(() => {
                 this.message = "The sound of footsteps down a hallway";
                 setTimeout(() => {
@@ -179,15 +181,17 @@ export default {
                   // new if statements available
                   setTimeout(() => {
                     this.message = "And jiggles...";
-                    this.subStoryState =
-                      STORY_STATE.DOOR.subStates.someoneAtDoor.value;
-                    this.disabled = false;
-                    this.focus();
-                  }, 2000);
-                }, 3000);
-              }, 3000);
+                    setTimeout(() => {
+                      this.subStoryState =
+                        STORY_STATE.DOOR.subStates.someoneAtDoor.value;
+                      this.disabled = false;
+                      this.focus();
+                    }, 1500);
+                  }, 2200);
+                }, 2800);
+              }, 2800);
               break;
-                case actionName.includes("run"):
+            case actionName.includes("run"):
               this.message = "You ran away...";
               setTimeout(() => {
                 this.gameState = GAME_STATE.END;
@@ -211,11 +215,15 @@ export default {
               }, 1000);
               break;
             case actionName.includes("knock"):
-                this.message = "The jiggling stops"
+              this.message = "The jiggling stops...";
+              setTimeout(() => {
+                this.message = "The door handle jiggles again...";
                 setTimeout(() => {
-                    this.message = "The knob starts to jiggle again..."
-                }, 1000);
-
+                  this.disabled = false;
+                  this.focus();
+                }, 1600);
+              }, 3000);
+              break;
             default:
               this.disabled = false;
               break;
@@ -251,23 +259,23 @@ export default {
   flex-direction: column;
 }
 .hide {
-    opacity: 0;
+  opacity: 0;
 }
 .end {
-    opacity: 1;
-    transition: opacity 2.2s ease-in-out;
+  opacity: 1;
+  transition: opacity 2.2s ease-in-out;
 }
 button {
-    color: white;
-    font-weight: 700;
-    background: linear-gradient(40deg, slateblue, firebrick);
-    border: none;
-    padding: 10px 20px;
-    border-radius: 3px;
-    box-shadow: 2px 4px 4px #2c3e506b;
+  color: white;
+  font-weight: 700;
+  background: linear-gradient(40deg, slateblue, firebrick);
+  border: none;
+  padding: 10px 20px;
+  border-radius: 3px;
+  box-shadow: 2px 4px 4px #2c3e506b;
 }
 input {
-    margin-top: 5px;
-    padding: 8px 20px;
+  margin-top: 5px;
+  padding: 8px 20px;
 }
 </style>
