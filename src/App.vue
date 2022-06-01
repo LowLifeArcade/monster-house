@@ -210,6 +210,11 @@ export default {
                 this.gameState = GAME_STATE.END;
               }, 1000);
               break;
+            case actionName.includes("knock"):
+                this.message = "The jiggling stops"
+                setTimeout(() => {
+                    this.message = "The knob starts to jiggle again..."
+                }, 1000);
 
             default:
               this.disabled = false;
