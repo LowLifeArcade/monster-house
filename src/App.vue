@@ -187,6 +187,12 @@ export default {
                 }, 3000);
               }, 3000);
               break;
+                case actionName.includes("run"):
+              this.message = "You ran away...";
+              setTimeout(() => {
+                this.gameState = GAME_STATE.END;
+              }, 1000);
+              break;
 
             default:
               this.disabled = false;
