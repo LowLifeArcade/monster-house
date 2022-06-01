@@ -26,7 +26,7 @@
   <div v-if="gameState === 'START'">
     <button @click="startGame">Start Game?</button>
   </div>
-  <div v-if="gameState === 'END'">
+  <div class="hide" :class="{'end': gameState === 'END'}">
     <button @click="startGame">Try Again?</button>
   </div>
 </template>
@@ -238,5 +238,25 @@ export default {
   justify-content: center;
   align-items: center;
   flex-direction: column;
+}
+.hide {
+    opacity: 0;
+}
+.end {
+    opacity: 1;
+    transition: opacity 2.2s ease-in-out;
+}
+button {
+    color: white;
+    font-weight: 700;
+    background: linear-gradient(40deg, slateblue, firebrick);
+    border: none;
+    padding: 10px 20px;
+    border-radius: 3px;
+    box-shadow: 2px 4px 4px #2c3e506b;
+}
+input {
+    margin-top: 5px;
+    padding: 8px 20px;
 }
 </style>
