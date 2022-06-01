@@ -13,11 +13,11 @@
         {{ message }}
       </p>
     </div>
-    <div class="prompt" v-if="gameState === 'IN_PROGRESS'">
+    <div class="prompt" v-if="gameState === 'IN_PROGRESS' && !disabled">
       {{ prompt }}
     </div>
     <input
-      v-if="gameState === 'IN_PROGRESS'"
+      v-if="gameState === 'IN_PROGRESS' && !disabled"
       autofocus
       ref="input"
       type="text"
@@ -274,15 +274,15 @@ body {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  
+
   color: #2c3e50;
   padding-top: 100px;
   margin: 0;
   padding: 0;
 }
 .game {
-    padding-top: 200px;
-    display: flex;
+  padding-top: 200px;
+  display: flex;
   flex-direction: column;
   align-items: center;
 }
@@ -319,11 +319,11 @@ body {
 button {
   color: rgb(220, 220, 220);
   font-weight: 700;
-  background: linear-gradient(40deg, rgb(95, 72, 245), rgb(181, 13, 13));
+  background: linear-gradient(40deg, rgb(0, 0, 0), rgb(67, 1, 1));
   border: none;
   padding: 10px 20px;
   border-radius: 3px;
-  box-shadow: 2px 4px 4px #2c3e506b;
+  box-shadow: 0px 0px 10px #85858548;
 }
 input {
   color: rgb(0, 0, 0);
@@ -336,7 +336,6 @@ input {
   outline: none;
 }
 input[type="text"]:disabled {
-    background-color: rgb(11, 11, 11);
+  background-color: rgb(11, 11, 11);
 }
-
 </style>
