@@ -123,6 +123,7 @@ export default {
     dispatch(e) {
       this.disabled = true;
       let actionName = e.target.value;
+      actionName = actionName.toLowerCase()
       console.log(actionName);
       this.characterAction = "";
       this.stateReducer(actionName);
@@ -151,10 +152,10 @@ export default {
                       STORY_STATE.DOOR.subStates.afterKnock.value;
                     this.disabled = false;
                     this.focus();
-                  }, 1800);
+                  }, 1200);
                   // new if statements available
-                }, 3000);
-              }, 2000);
+                }, 2800);
+              }, 1800);
               break;
             case actionName.includes("run"):
               this.message = "You ran away...";
@@ -187,9 +188,9 @@ export default {
                       this.disabled = false;
                       this.focus();
                     }, 1500);
-                  }, 2200);
-                }, 2800);
-              }, 2800);
+                  }, 2000);
+                }, 2700);
+              }, 2300);
               break;
             case actionName.includes("run"):
               this.message = "You ran away...";
@@ -222,7 +223,7 @@ export default {
                   this.disabled = false;
                   this.focus();
                 }, 1600);
-              }, 3000);
+              }, 2000);
               break;
             default:
               this.disabled = false;
