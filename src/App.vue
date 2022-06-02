@@ -274,13 +274,15 @@ body {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-
+    display: grid;
+    place-content: center;
   color: #2c3e50;
   padding-top: 100px;
   margin: 0;
   padding: 0;
 }
 .game {
+    width: 300px;
   padding-top: 200px;
   display: flex;
   flex-direction: column;
@@ -297,6 +299,7 @@ body {
 .game-message {
   color: white;
   width: 100%;
+  height: 150px;
   padding: 50px;
   margin: 20px;
   background: black;
@@ -326,7 +329,7 @@ button {
   box-shadow: 0px 0px 10px #85858548;
 }
 input {
-  width: 280px;
+
   color: rgb(0, 0, 0);
   font-weight: 700;
   margin-top: 8px;
