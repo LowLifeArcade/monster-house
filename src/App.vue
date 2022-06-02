@@ -238,14 +238,16 @@ export default {
           this.subStoryState === STORY_STATE.DOOR.subStates.someoneAtDoor.value
         ) {
           switch (true) {
+            case actionName.includes("knock"):
+              await gameMessage("The jiggling stops...", 0);
+              await gameMessage("The door handle jiggles again...", 1.8);
+              await advanceSubStory(
+                STORY_STATE.DOOR.subStates.someoneAtDoor.value
+              );
+              return;
             case actionName.includes("run"):
               await gameMessage("You ran away...", 0);
               return await setGameState(GAME_STATE.END);
-
-            case actionName.includes("knock"):
-              await gameMessage("The jiggling stops...", 0);
-              await gameMessage("The door handle jiggles again...", 1.8, true);
-              return;
 
             default:
               this.disabled = false;
@@ -274,15 +276,15 @@ body {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-    display: grid;
-    place-content: center;
+  display: grid;
+  place-content: center;
   color: #2c3e50;
   padding-top: 100px;
   margin: 0;
   padding: 0;
 }
 .game {
-    width: 300px;
+  width: 300px;
   padding-top: 200px;
   display: flex;
   flex-direction: column;
@@ -329,7 +331,7 @@ button {
   box-shadow: 0px 0px 10px #85858548;
 }
 input {
-    font-size: 16px;
+  font-size: 16px;
   color: rgb(0, 0, 0);
   font-weight: 700;
   margin-top: 8px;
