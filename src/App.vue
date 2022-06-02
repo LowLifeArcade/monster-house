@@ -326,6 +326,7 @@ button {
   box-shadow: 0px 0px 10px #85858548;
 }
 input {
+  width: 280px;
   color: rgb(0, 0, 0);
   font-weight: 700;
   margin-top: 8px;
