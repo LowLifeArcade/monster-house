@@ -62,8 +62,19 @@ export default {
       prompt: "What will you do?",
       characterAction: "",
       disabled: false,
+      seenPot: false,
+      foundKey: false,
+      hasKey: false,
+      keyStuck: false,
+      keyBroken: false,
+      keyTry: 0,
       //   stateMachine: { ...GAME_STATE },
     };
+  },
+  watch: {
+      keyTry(keytry) {
+          console.log('key try', keytry)
+      }
   },
   methods: {
     submitAction(e) {
@@ -163,7 +174,7 @@ export default {
        * @param {number} time time of message in seconds
        * @param {boolean} end sets whether this is the end of the section or not
        */
-      const gameMessage = (msg, time = 1, end = false) => {
+      const gameMessage = (msg, time = 1.3, end = false) => {
         return new Promise((res) => {
           setTimeout(() => {
             res(
@@ -182,7 +193,7 @@ export default {
           this.subStoryState === STORY_STATE.DOOR.subStates.beforeKnock.value
         ) {
           switch (true) {
-            case actionName.includes("kick" && "door"):
+            case /(?=.*kick)(?=.*door)/.test(actionName):
               await gameMessage("You kicked the door", 0);
               await gameMessage("You kicked the door again", 1.5);
               await gameMessage("And again", 1.5);
@@ -248,6 +259,100 @@ export default {
             case actionName.includes("run"):
               await gameMessage("You ran away...", 0);
               return await setGameState(GAME_STATE.END);
+
+            default:
+              this.disabled = false;
+              break;
+          }
+        }
+        if (this.seenPot === false) {
+          switch (true) {
+            case actionName.includes("look" && "around"):
+              await gameMessage("You look around", 0);
+              await gameMessage("You see a pot", 2, true);
+              this.seenPot = true;
+              return;
+            default:
+              this.disabled = false;
+
+              break;
+          }
+        }
+        if (this.seenPot === true && this.foundKey == false) {
+          switch (true) {
+            case actionName.includes("look" && "around"):
+              await gameMessage("You look around", 0);
+              await gameMessage(
+                "You see the pot again, but nothing else unusual",
+                2,
+                true
+              );
+              return;
+            case actionName.includes("kick" && "pot"):
+              await gameMessage("You kick the pot", 0);
+              await gameMessage("It breaks!");
+              await gameMessage(
+                "You see a shiny object in the rubble",
+                1,
+                true
+              );
+              this.foundKey = true;
+              return
+            default:
+              this.disabled = false;
+              break;
+          }
+        }
+        if (this.foundKey == true && this.hasKey == false) {
+          switch (true) {
+            case /\bgrab\b|\bpick\b|\bsnatch\b/.test(actionName):
+              await gameMessage(
+                "You picked up the shiny object from the rubble",
+                0
+              );
+              await gameMessage("It's a key", 1, true);
+              this.hasKey = true;
+              return;
+            default:
+              this.disabled = false;
+              break;
+          }
+        }
+        if (this.hasKey == true && this.keyStuck == false) {
+          switch (true) {
+            case /(?=.*use)(?=.*key)(?=.*door)/.test(actionName):
+              await gameMessage("You put the key in the door", 0);
+              await gameMessage("You turn the key");
+              await gameMessage("It feels stuck", 1.3, true);
+              this.keyStuck = true;
+              return;
+            case /(?=.*use)(?=.*key)(?!.*door)/.test(actionName):
+              await gameMessage("Where do you want to use the key?", 0, true);
+
+              return;
+            default:
+              this.disabled = false;
+              break;
+          }
+        }
+        if (this.keyStuck == true && this.keyTry < 3) {
+          switch (true) {
+            case /\bturn\b|\bkey\b/.test(actionName):
+              await gameMessage("You turn the key again", 0);
+              await gameMessage("It still feels stuck", 1.3, true);
+              this.keyTry = this.keyTry + 1;
+              return;
+            default:
+              this.disabled = false;
+              return;
+          }
+        }
+        if (this.keyTry = 3 && this.keyBroken == false) {
+          switch (true) {
+            case /\bturn\b|\bkey\b/.test(actionName):
+              await gameMessage("The key breaks", 0, true);
+              this.keyBroken = true;
+              return;
 
             default:
               this.disabled = false;
