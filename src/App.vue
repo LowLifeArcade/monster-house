@@ -72,9 +72,9 @@ export default {
     };
   },
   watch: {
-      keyTry(keytry) {
-          console.log('key try', keytry)
-      }
+    keyTry(keytry) {
+      console.log("key try", keytry);
+    },
   },
   methods: {
     submitAction(e) {
@@ -297,7 +297,7 @@ export default {
                 true
               );
               this.foundKey = true;
-              return
+              return;
             default:
               this.disabled = false;
               break;
@@ -335,7 +335,7 @@ export default {
               break;
           }
         }
-        if (this.keyStuck == true && this.keyTry < 3) {
+        if (this.keyStuck == true && this.keyTry < 1) {
           switch (true) {
             case /\bturn\b|\bkey\b/.test(actionName):
               await gameMessage("You turn the key again", 0);
@@ -344,10 +344,10 @@ export default {
               return;
             default:
               this.disabled = false;
-              return;
+              break;
           }
         }
-        if (this.keyTry = 3 && this.keyBroken == false) {
+        if ((this.keyTry === 1 && this.keyBroken == false)) {
           switch (true) {
             case /\bturn\b|\bkey\b/.test(actionName):
               await gameMessage("The key breaks", 0, true);
