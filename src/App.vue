@@ -335,7 +335,7 @@ export default {
               break;
           }
         }
-        if (this.keyStuck == true && this.keyTry < 1) {
+        if (this.keyStuck == true && this.keyTry < 2) {
           switch (true) {
             case /\bturn\b|\bkey\b/.test(actionName):
               await gameMessage("You turn the key again", 0);
@@ -347,10 +347,11 @@ export default {
               break;
           }
         }
-        if ((this.keyTry === 1 && this.keyBroken == false)) {
+        if ((this.keyTry === 2 && this.keyBroken == false)) {
           switch (true) {
             case /\bturn\b|\bkey\b/.test(actionName):
-              await gameMessage("The key breaks", 0, true);
+              await gameMessage("The key breaks", 0);
+              await gameMessage("It's useless now", 2, true)
               this.keyBroken = true;
               return;
 
