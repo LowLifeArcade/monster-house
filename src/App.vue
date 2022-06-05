@@ -67,6 +67,9 @@ export default {
       hasKey: false,
       keyStuck: false,
       keyBroken: false,
+      zombieSeen: false,
+      zombieAttacking: false,
+      hitZombie: 0,
       keyTry: 0,
       //   stateMachine: { ...GAME_STATE },
     };
@@ -265,6 +268,8 @@ export default {
               break;
           }
         }
+
+        // The pot sub story. Can go on any time during Door scene.
         if (this.seenPot === false) {
           switch (true) {
             case actionName.includes("look" && "around"):
@@ -335,7 +340,7 @@ export default {
               break;
           }
         }
-        if (this.keyStuck == true && this.keyTry < 2) {
+        if (this.keyStuck == true && this.keyTry < 1) {
           switch (true) {
             case /\bturn\b|\bkey\b/.test(actionName):
               await gameMessage("You turn the key again", 0);
@@ -347,12 +352,101 @@ export default {
               break;
           }
         }
-        if ((this.keyTry === 2 && this.keyBroken == false)) {
+        if (this.keyTry === 1 && this.keyBroken == false) {
           switch (true) {
             case /\bturn\b|\bkey\b/.test(actionName):
               await gameMessage("The key breaks", 0);
-              await gameMessage("It's useless now", 2, true)
+              await gameMessage("It's useless now...", 2, true);
               this.keyBroken = true;
+              return;
+
+            default:
+              this.disabled = false;
+              break;
+          }
+        }
+        console.log(this.keyBroken);
+
+        if (this.keyBroken == true) {
+          switch (true) {
+            case actionName.includes("look"):
+              await gameMessage("You look around", 0);
+              await gameMessage("ZOMBIE!", 2, true);
+              this.zombieSeen = true;
+              return;
+
+            default:
+              this.disabled = false;
+              break;
+          }
+        }
+        if (
+          this.keyBroken == true &&
+          this.zombieSeen == true &&
+          this.zombieAttacking == false
+        ) {
+          switch (true) {
+            case /\bkick\b|\bzombie\b/.test(actionName):
+              await gameMessage("You kicked the zombie", 0);
+              await gameMessage("He lunges at you!!!", 2, true);
+              this.zombieAttacking = true;
+              return;
+            case actionName.includes("slap"):
+              await gameMessage("You slap the zombie", 0);
+              await gameMessage("The zombie doesn't respond", 2);
+              await gameMessage("It just growls and moans", 2, true);
+              return;
+            case actionName.includes("punch"):
+              await gameMessage("You punch the zombie", 0);
+              await gameMessage("The zombie barely responds", 2);
+              await gameMessage("It just growls and moans", 2, true);
+              return;
+
+            default:
+              this.disabled = false;
+              break;
+          }
+        }
+        if (this.zombieAttacking && this.hitZombie < 2) {
+          switch (true) {
+            case /\bkick\b|\bzombie\b/.test(actionName):
+              await gameMessage("You kicked the zombie", 0);
+              await gameMessage("He's still coming!", 2, true);
+              this.hitZombie = this.hitZombie + 1;
+              return;
+            case actionName.includes("slap"):
+              await gameMessage("You slap the zombie", 0);
+              await gameMessage("The zombie is still coming!", 2, true);
+              this.hitZombie = this.hitZombie + 1;
+              return;
+            case actionName.includes("punch"):
+              await gameMessage("You punch the zombie", 0);
+              await gameMessage("The zombie won't stop!!", 2, true);
+              this.hitZombie = this.hitZombie + 1;
+              return;
+
+            default:
+              this.disabled = false;
+              break;
+          }
+        }
+        console.log(this.hitZombie)
+        if (this.zombieAttacking && this.hitZombie == 2) {
+          switch (true) {
+            case /\bkick\b|\bzombie\b/.test(actionName):
+              await gameMessage("You kicked the zombie", 0);
+              await gameMessage("You were eaten...", 2, true);
+              await setGameState(GAME_STATE.END);
+              return;
+            case actionName.includes("slap"):
+              await gameMessage("You slap the zombie", 0);
+              await gameMessage("You were eaten...", 2, true);
+              await setGameState(GAME_STATE.END);
+              return;
+            case actionName.includes("punch"):
+              await gameMessage("You punch the zombie", 0);
+              await gameMessage("You were eaten...", 2, true);
+              await setGameState(GAME_STATE.END);
               return;
 
             default:
